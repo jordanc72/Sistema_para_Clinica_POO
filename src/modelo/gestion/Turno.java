@@ -29,10 +29,11 @@ public class Turno {
 	}
 	
 	public void registrarAsistencia(boolean vino) {
-		this.asistencia = true;
+		this.asistencia = vino;
 		if(!vino) {
-			paciente.registrarInasistencias();
+			paciente.registrarInasistencia();
 		}	
+		
 	}
 
 	public Medico getMedicoAsignado() {
@@ -69,6 +70,14 @@ public class Turno {
 
 	public boolean isAsistencia() {
 		return asistencia;
+	}
+
+	public LocalDateTime getHoraInicio() {
+		return horaInicio;
+	}
+
+	public LocalDateTime getHoraFin() {
+		return horaFin;
 	}
 	
 }

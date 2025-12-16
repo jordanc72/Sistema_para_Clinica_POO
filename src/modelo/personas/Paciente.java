@@ -7,30 +7,43 @@ import modelo.patrones.Observador;
 
 public class Paciente extends Persona {
 	private String obraSocial;
-	private int contadorInasistencias;
+	private int contadorInasistencias = 0;
 	private List<Turno> historialTurnos;
 	
 	private List<Observador> suscriptores = new ArrayList<>();
+	private boolean changed = false;
+	
+
 
 	public Paciente(String dni, String nombre, String email, String obraSocial) {
 		super(dni, nombre, email);
 		this.obraSocial = obraSocial;
 		this.historialTurnos = new ArrayList<>();
-		this.contadorInasistencias = 0;
 		
+		
+	}
+	public void agregarObservador(Observador o) {
+        this.suscriptores.add(o);
+    }
+	
+	private void notificarAdministrativos(Object arg) {
+		if(this.changed) {
+			for (Observador o : suscriptores) {
+				o.actualizar(this, arg);
+			}
+			this.changed = false;
+			
+		}
 	}
 	
-	public void registrarInasistencias() {
+	public void registrarInasistencia() {
 		this.contadorInasistencias++;
-		if(this.contadorInasistencias>3) {
-			notificarAdministrativos();
+		
+		if(this.contadorInasistencias >= 3) {
+			setChanged();
+			notificarAdministrativos("ALERTA: Paciente con 3 faltas. Llamar urgente.");
 		}
 		
-	}
-	private void notificarAdministrativos() {
-		for (Observador o : suscriptores) {
-			o.actualizar(registrarInasistencias());
-		}
 	}
 
 	public String getObraSocial() {
@@ -40,6 +53,12 @@ public class Paciente extends Persona {
 	public List<Turno> getHistorialTurnos() {
 		return historialTurnos;
 	}
-	
+
+	public boolean isChanged() {
+		return changed;
+	}
+	public boolean setChanged() {
+		return changed;
+	}
 	
 }
